@@ -1,11 +1,11 @@
 
 // load api data 
-const loadData=async()=>{
+const loadData=async(dataLimit)=>{
     const url=`https://www.themealdb.com/api/json/v1/1/search.php?s=fish`;
   try{
     const res= await fetch(url);
     const data= await res.json();
-    showData(data)
+    showData(data,dataLimit)
   }
   catch(error){
 console.log(error)
@@ -13,12 +13,21 @@ console.log(error)
 
 }
 
-const showData=(data)=>{
+const showData=(data,dataLimit)=>{
 const single__card=document.getElementById("single__card");
-const sliceData=data.meals.slice(0,10);
+single__card.innerHTML="";
+data=data.meals;
+// view all container 
+const view__all= document.getElementById("view__all");
+if (dataLimit && data.length> 8) {
+     data=data.slice(0,dataLimit);
+     view__all.classList.remove("d-none")
+}else{
+    view__all.classList.add("d-none")  
+}
 
-sliceData.forEach(element => {
-        const {strMeal,strInstructions,strMealThumb}=element;
+data.forEach(element => {
+        const {strMeal,strMealThumb}=element;
         console.log(element)
        const div = document.createElement("div");
        div.classList.add("col-md-6");
@@ -53,4 +62,9 @@ sliceData.forEach(element => {
 
 }
 
-loadData();
+
+document.getElementById("viewAll").addEventListener("click",function(){
+    loadData()
+})
+
+loadData(5);
